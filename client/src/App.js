@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SignUp from "./pages/signup/signup";
 import Login from "./pages/login/login";
 import Netflix from "./pages/netflix/Netflix";
+import Player from "./pages/player/player";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Netflix />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/player" element={<Player />} />
         </Routes>
       </Router>
     </>

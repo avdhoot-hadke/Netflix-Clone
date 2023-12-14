@@ -1,0 +1,14 @@
+.player{
+    background-color: #181818;
+}
+.back{
+    position: absolute;
+    margin-left: 2rem;
+    margin-top: 1rem;
+    z-index: 2;
+}
+video{
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}

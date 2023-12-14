@@ -1,10 +1,67 @@
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import signupLogo from "../../assets/logo.png";
 import "./signup.css";
+import { useEffect, useState } from "react";
+import { firebaseAuth } from "../../util/firebase-config";
 
 function SignUp() {
   const navigate = useNavigate();
-  const error = false;
+  const [error, setError] = useState(false);
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  function handleChange(e) {
+    e.preventDefault();
+    const { value, name } = e.target;
+
+    setValues((prevValue) => {
+      if (name === "email") {
+        return {
+          email: value,
+          password: prevValue.password,
+        };
+      } else if (name === "password") {
+        return {
+          email: prevValue.email,
+          password: value,
+        };
+      }
+    });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(false);
+    console.log(values);
+    try {
+      const { email, password } = values;
+      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    } catch (error) {
+      setError(true);
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
+      if (currentUser) {
+        navigate("/");
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup function to unsubscribe when the component is unmounted
+  }, []);
+
   return (
     <div className="signup-page">
       <div className="signup-nav">
@@ -13,7 +70,7 @@ function SignUp() {
         <div className="ms-auto me-5">
           <button
             type="button"
-            class="btn btn-danger"
+            className="btn btn-danger"
             onClick={() => {
               navigate("/login");
             }}
@@ -29,33 +86,52 @@ function SignUp() {
         <p>
           Ready to watch? Enter your email to create or restart your membership.
         </p>
-        <form className="signup-form " data-bs-theme="dark">
+        <form
+          className="signup-form "
+          data-bs-theme="dark"
+          onSubmit={handleSubmit}
+        >
           {/* email */}
-          <div class="form-floating signup-form-floating ">
+          <div className="form-floating signup-form-floating ">
             <input
               type="email"
-              class="form-control signup-blur-bg rounded-0 rounded-start"
+              className="form-control signup-blur-bg rounded-0 rounded-start"
               id="floatingInput"
               placeholder="name@example.com"
+              name="email"
+              onChange={handleChange}
+              value={values.email}
             />
-            <label for="floatingInput">Email address</label>
+            <label htmlFor="floatingInput">Email address</label>
           </div>
 
           {/* password */}
-          <div class="form-floating signup-form-floating ">
+          <div className="form-floating signup-form-floating ">
             <input
               type="password"
-              class="form-control signup-blur-bg rounded-0 rounded-end border-start-0"
+              className="form-control signup-blur-bg rounded-0 rounded-end border-start-0 "
               id="floatingPassword"
               placeholder="Password"
+              name="password"
+              onChange={handleChange}
+              value={values.password}
             />
-            <label for="floatingPassword">Password</label>
+
+            <label htmlFor="floatingPassword">Password</label>
           </div>
 
-          <button type="submit" class="btn btn-danger signup-submit-btn  ms-2">
+          <button
+            type="submit"
+            className="btn btn-danger signup-submit-btn  ms-2"
+          >
             Get Started &nbsp;&nbsp;&nbsp;❯
           </button>
         </form>
+        {error && (
+          <div className="  signup-error">
+            SignUp failed. Please check your information and try again.
+          </div>
+        )}
       </div>
     </div>
   );
