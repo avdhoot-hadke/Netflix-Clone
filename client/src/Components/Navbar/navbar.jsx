@@ -92,7 +92,7 @@ function Navbar() {
       </div>
       <div className="navbar-item  me-5">
         <a href="/" onClick={handleLogOut}>
-          <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>{" "}
+          <i className="fa-solid fa-arrow-right-from-bracket fa-lg"></i>{" "}
         </a>
       </div>
     </div>

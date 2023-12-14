@@ -1,42 +1,41 @@
-import Navbar from "../../Components/Navbar/navbar";
 import "./netflix.css";
-import backgroundImg from "../../assets/home.jpg";
+import Navbar from "../../Components/Navbar/navbar";
 import movieLogo from "../../assets/homeTitle.webp";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { fetchMovies, getGenres } from "../../store/features";
+import { useDispatch, useSelector } from "react-redux";
 
 function Netflix() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
+  useEffect(() => {
+    dispatch(getGenres());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (genresLoaded) {
+      dispatch(fetchMovies({ type: "all" }));
+    }
+  }, [genresLoaded, dispatch]);
   return (
-    <div className="netflix-home">
+    <div className="netflix-home container-fluid p-0">
       <Navbar />
       <div className="hero">
-        <img src={backgroundImg} alt="bgImg" className="netflix-bg-img"></img>
-
-        <div className="netflix-hero-cont">
-          <img
-            src={movieLogo}
-            alt="movieLogo"
-            className="netflix-hero-logo mb-4"
-          />
-
-          <div className="netflix-hero-item mt-3">
-            <button
-              type="button"
-              class="btn btn-light netflix-hero-btn"
-              onClick={() => navigate("/player")}
-            >
-              <i class="fa-solid fa-play fa-xl me-2"></i>
-              Play
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary netflix-hero-btn ms-4"
-            >
-              <i class="fa-solid fa-circle-info fa-xl me-2"></i>
-              More Info
-            </button>
-          </div>
-        </div>
+        <img className="hero-movie-logo" src={movieLogo} alt="" />
+        <button
+          className="btn btn-light btn-play "
+          type="submit"
+          onClick={() => navigate("/player")}
+        >
+          <i className="fa-solid fa-play me-2"></i>
+          Play
+        </button>
+        <button className="btn btn-secondary btn-more-info " type="submit">
+          <i className="fa-solid fa-circle-info me-2"></i>
+          More info
+        </button>
       </div>
     </div>
   );

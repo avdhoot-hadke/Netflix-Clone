@@ -1,9 +1,8 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import signupLogo from "../../assets/logo.png";
 import "./signup.css";
 import { useEffect, useState } from "react";
@@ -60,7 +59,7 @@ function SignUp() {
     });
 
     return () => unsubscribe(); // Cleanup function to unsubscribe when the component is unmounted
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="signup-page">
